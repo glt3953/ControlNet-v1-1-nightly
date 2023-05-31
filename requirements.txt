@@ -1,0 +1,9 @@
+einops
+transformers
+open_clip_torch
+gradio
+pytorch-lightning==1.7.7
+omegaconf
+basicsr
+timm==0.6.7
+translate

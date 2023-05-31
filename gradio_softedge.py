@@ -14,7 +14,10 @@ from annotator.hed import HEDdetector
 from annotator.pidinet import PidiNetDetector
 from cldm.model import create_model, load_state_dict
 from cldm.ddim_hacked import DDIMSampler
+from translate import Translator
 
+# 初始化Translator对象,指定源语言和目标语言
+translator = Translator(from_lang="zh", to_lang="en")
 
 preprocessor = None
 
@@ -62,6 +65,10 @@ def process(det, input_image, prompt, a_prompt, n_prompt, num_samples, image_res
         if config.save_memory:
             model.low_vram_shift(is_diffusing=False)
 
+        print(prompt)
+        prompt = translator.translate(prompt) #翻译为英文
+        print(prompt)
+            
         cond = {"c_concat": [control], "c_crossattn": [model.get_learned_conditioning([prompt + ', ' + a_prompt] * num_samples)]}
         un_cond = {"c_concat": None if guess_mode else [control], "c_crossattn": [model.get_learned_conditioning([n_prompt] * num_samples)]}
         shape = (4, H // 8, W // 8)
@@ -94,8 +101,8 @@ with block:
     with gr.Row():
         with gr.Column():
             input_image = gr.Image(source='upload', type="numpy")
-            prompt = gr.Textbox(label="Prompt")
-            run_button = gr.Button(label="Run")
+            prompt = gr.Textbox(label='作品描述', placeholder='请输入您的创作想法')
+            run_button = gr.Button(label="生成")
             num_samples = gr.Slider(label="Images", minimum=1, maximum=12, value=1, step=1)
             seed = gr.Slider(label="Seed", minimum=-1, maximum=2147483647, step=1, value=12345)
             det = gr.Radio(choices=["SoftEdge_PIDI", "SoftEdge_PIDI_safe", "SoftEdge_HED", "SoftEdge_HED_safe", "None"], type="value", value="SoftEdge_PIDI", label="Preprocessor")
