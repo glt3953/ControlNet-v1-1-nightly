@@ -88,9 +88,9 @@ with block:
         gr.Markdown("## Control Stable Diffusion with Canny Edges")
     with gr.Row():
         with gr.Column():
-            input_image = gr.Image(source='upload', type="numpy")
+            input_image = gr.Image(label="Image", type="pil", elem_id="fixed_size_img")
             prompt = gr.Textbox(label="Prompt")
-            run_button = gr.Button(label="Run")
+            run_button = gr.Button(value="Run")
             num_samples = gr.Slider(label="Images", minimum=1, maximum=12, value=1, step=1)
             seed = gr.Slider(label="Seed", minimum=-1, maximum=2147483647, step=1, value=12345)
             det = gr.Radio(choices=["Canny", "None"], type="value", value="Canny", label="Preprocessor")
@@ -107,9 +107,10 @@ with block:
                 a_prompt = gr.Textbox(label="Added Prompt", value='best quality')
                 n_prompt = gr.Textbox(label="Negative Prompt", value='lowres, bad anatomy, bad hands, cropped, worst quality')
         with gr.Column():
-            result_gallery = gr.Gallery(label='Output', show_label=False, elem_id="gallery").style(grid=2, height='auto')
+            # result_gallery = gr.Gallery(label='Output', show_label=False, elem_id="gallery").style(grid=2, height='auto')
+            result_gallery = gr.Gallery(label='Output', show_label=False, elem_id="gallery")
     ips = [det, input_image, prompt, a_prompt, n_prompt, num_samples, image_resolution, detect_resolution, ddim_steps, guess_mode, strength, scale, seed, eta, low_threshold, high_threshold]
     run_button.click(fn=process, inputs=ips, outputs=[result_gallery])
 
 
-block.launch(server_name='0.0.0.0')
+block.launch(share=True, debug=True)
