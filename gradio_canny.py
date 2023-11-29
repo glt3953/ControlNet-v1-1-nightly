@@ -88,7 +88,7 @@ with block:
         gr.Markdown("## Control Stable Diffusion with Canny Edges")
     with gr.Row():
         with gr.Column():
-            input_image = gr.Image(label="Image", type="pil", elem_id="fixed_size_img")
+            input_image = gr.Image(label="Image", type="numpy", elem_id="fixed_size_img")
             prompt = gr.Textbox(label="Prompt")
             run_button = gr.Button(value="Run")
             num_samples = gr.Slider(label="Images", minimum=1, maximum=12, value=1, step=1)
